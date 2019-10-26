@@ -1,0 +1,30 @@
+/*
+ * **********************************************************************
+ * You are free to add or modify anything you think you require to this file
+ */
+
+#ifndef _INVESTOR_PRODUCER_H_
+#define _INVESTOR_PRODUCER_H_
+
+/**
+ * FUNCTIONs Prototype declares here
+ * Add or modify more funtion if you need more
+ **/
+void order_item(void *, void *);          // customer orders one or more items
+int consume_item(void *, void *, void *, unsigned long); // consume items and update spending
+void end_shoping(void);      // finish shoping and go home
+
+/* Producer functions */
+void *take_order(void *);                     //take order from the customers
+void produce_item(void *);                    // producer produce an item or product
+long int calculate_loan_amount(void *);     //calculate loan amount
+void loan_request(void *, unsigned long);   // producer request loan to a bank
+void serve_order(void *, unsigned long);    // producer serve the request of a customer
+void loan_reimburse(void *, unsigned long); // return loan money with service charge
+
+/* Investor-Producer process opening and closing functions */
+
+void initialize(void);
+void finish(void);
+
+#endif

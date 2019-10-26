@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "synch.h": "c",
+        "types.h": "c"
+    }
+}
