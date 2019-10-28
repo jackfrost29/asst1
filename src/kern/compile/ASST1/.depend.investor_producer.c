@@ -6,4 +6,5 @@ investor_producer.o: ../../asst1/investor_producer.c \
  opt-hangman.h includelinks/machine/spinlock.h ../../include/test.h \
  ../../include/thread.h ../../include/array.h ../../include/threadlist.h \
  includelinks/machine/thread.h ../../include/setjmp.h \
- includelinks/kern/machine/setjmp.h ../../asst1/investor_producer.h
+ includelinks/kern/machine/setjmp.h ../../asst1/investor_producer.h \
+ ../../asst1/invest_assignment.h

@@ -237,7 +237,7 @@ int runInvestorProducer(int nargs, char **args)
 	/***********************************************************************
 	 * call your routine that initializes the rest of the Investor Producer
 	 */
-	initialize();
+	initialize(customer_spending_amount, producer_income);	// initializes customer spending and producer income
 
 	/* Start the producer */
 	for (i = 0; i < NPRODUCER; i++)
@@ -273,7 +273,7 @@ int runInvestorProducer(int nargs, char **args)
 	 * Call your Investor Producer clean up routine
 	 * you can insert your code as needed to clean up
 	 */
-	finish();
+	finish();	// no need as of yet;
 	sem_destroy(alldone);
 	//must print the statistics and validate -- need more codes
 	/*for (i =0 ; i < NBANK; i++) {

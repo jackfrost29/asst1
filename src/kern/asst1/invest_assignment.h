@@ -88,14 +88,14 @@ void print_statistics(void); // Testing tools
  * At the time of consumption customer must keep track of his/her spending
  **/
 extern void order_item(void *, void *);			 // order one or more items
-extern int consume_item(void *, unsigned long); //consume items and pay bills for items (if any) in the service queue of a customer
+extern int consume_item(void *, void *, void *, unsigned long); //consume items and pay bills for items (if any) in the service queue of a customer
 extern void end_shoping(void);			 //finish shoping and go home
 
 /* Producer functions */
-extern void *take_order(void);					   //take order from the customer (order queue)
+extern void *take_order(void *);					   //take order from the customer (order queue)
 extern void produce_item(void *);				   // producer produce one or items
 extern long int calculate_loan_amount(void *);	 //calculate the loan amount
-extern void loan_request(void *, unsigned long);   // producer request loan to one or banks if needed
+extern void loan_request(void *, void *, unsigned long);   // producer request loan to one or banks if needed
 extern void serve_order(void *, unsigned long);	// producer serve the requested items of a customer
 extern void loan_reimburse(void *, unsigned long); // return loan money with a service charge
 extern int count_item_not_served(void *);
@@ -106,7 +106,7 @@ extern void insert(void *, void *);
  *  You may add your variables and tools at the begining of the
  *  shoping. Initilize for today's activities. 
  * */
-extern void initialize(void);
+extern void initialize(void *, void *);
 /* finish the process; clean the system for the next day */
 extern void finish(void);
 

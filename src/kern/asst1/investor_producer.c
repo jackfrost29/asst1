@@ -156,10 +156,11 @@ void end_shoping()
 
 void *take_order(void *list)
 {
+	(struct item*) list;
 	if(list == NULL)
 		return NULL;
 	// only change the servedby value of the item and return a structure pointer
-	// the structure name is: order; it will hold the begin and end of the order items from list
+	// the structure name is: order
 	(struct item*)list;
 	int count = count_item_not_served(list);
 	int order_count;
@@ -309,9 +310,16 @@ void loan_reimburse(void *bank_data, unsigned long producernumber)
  * producers and customers
  */
 
-void initialize()
+void initialize(void *customer, void *producer)
 {
-	panic("You need to write some code!!!!");
+	(long int*) customer;
+	(long int*) producer;
+	for(int i=0; i<NPRODUCER; i++){
+		producer[i] = 0;
+	}
+	for(int i=0; i<NCUSTOMER; i++){
+		customer[i] = 0;
+	}
 }
 
 /*

@@ -24,7 +24,7 @@ void loan_reimburse(void *, unsigned long); // return loan money with service ch
 
 /* Investor-Producer process opening and closing functions */
 
-void initialize(void);
+void initialize(void *, void *);
 void finish(void);
 
 #endif
