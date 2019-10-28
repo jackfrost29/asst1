@@ -39,10 +39,10 @@
  */
 struct bankdata
 {
-	long int org_total_cash;	   /* the orginal total cash for investment */
+	long int org_total_cash;	   /* the orginal total cash for investment. infinite */	
 	long int remaining_cash;	   /* the actual cash ready for investment */
-	long int interest_amount;	  /* Total Accumulated Interest Amount */
-	long int acu_loan_amount;	  /* Accumulated loan amount */
+	long int interest_amount;	  /* Total Accumulated Interest Amount i.e 5 % of accumulated loan amount */
+	long int acu_loan_amount;	  /* Accumulated loan amount i.e the amount of loan given by the bank to different producers so far */
 	long int prod_loan[NPRODUCER]; /* Producer's current loan amount for this bank */
 };
 
@@ -88,7 +88,7 @@ void print_statistics(void); // Testing tools
  * At the time of consumption customer must keep track of his/her spending
  **/
 extern void order_item(void *, void *);			 // order one or more items
-extern void consume_item(void *, unsigned long); //consume items and pay bills for items (if any) in the service queue of a customer
+extern int consume_item(void *, unsigned long); //consume items and pay bills for items (if any) in the service queue of a customer
 extern void end_shoping(void);			 //finish shoping and go home
 
 /* Producer functions */
@@ -99,6 +99,7 @@ extern void loan_request(void *, unsigned long);   // producer request loan to o
 extern void serve_order(void *, unsigned long);	// producer serve the requested items of a customer
 extern void loan_reimburse(void *, unsigned long); // return loan money with a service charge
 extern int count_item_not_served(void *);
+extern void insert(void *, void *);
 
 /**
  *  Investor-Producer process opening and closing functions

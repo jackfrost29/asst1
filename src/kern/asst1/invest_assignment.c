@@ -16,7 +16,7 @@
 /* #define PRINT_ON */
 
 /* this semaphore is for cleaning up at the end. */
-static struct semaphore *alldone, *sem_item;
+static struct semaphore *alldone, *sem_item, *sem_bank;
 
 /* request and service queue; order type will tell either it is a request or a service */
 struct item *req_serv_item;	// need semaphore
@@ -134,7 +134,7 @@ void producer(void *unusedpointer, unsigned long prod)
 		kprintf("P %ld taking order\n", prod);
 #endif
 		P(sem_item);
-		o = take_order(list);
+		o = take_order(req_serv_item);
 		V(sem_item);
 		if (o != NULL)
 		{
@@ -145,20 +145,44 @@ void producer(void *unusedpointer, unsigned long prod)
 #ifdef PRINT_ON
 			kprintf("S %ld request for loan\n", prod);
 #endif
-			loan_request(&amount, prod);
+			// before taking loan we have to detarmine which bank to take loan from
+			// the bank that has the least amount of loan right now, will be selected for taking loan
+			
+			P(sem_bank);
+			int minLoan = 0;
+			for(int j=1; j<NBANK; j++){
+				if(bank_account[j].acu_loan_amount < bank_account[minLoan].acu_loan_amount)
+					minLoan = j;
+			}
+			loan_request(&(bank_account[minLoan]), &amount, prod);
+			amount = minLoan;
+			V(sem_bank);
+
 #ifdef PRINT_ON
 			kprintf("S %ld producing item\n", prod);
 #endif
 			i++;
-			produce_item(o);
+			produce_item(o);	// this function is redundant
 
 #ifdef PRINT_ON
 			kprintf("S %ld serving\n", prod);
 #endif
 
+			P(sem_item);
 			serve_order(o, prod);
+			V(sem_item);
 
-			loan_reimburse(&amount, prod);
+			//
+			while ((bank_account[amount].prod_loan[prod])*BANK_INTEREST/100 < producer_income[prod])
+			{
+				// the particular amount of loan is not collected for the particular bank as of yet
+				// so the producer will wait until the customer pays for his service
+				// and then pays back his loan
+				thread_yield();
+			}
+			P(sem_bank);
+			loan_reimburse(&(bank_account[amount]), prod);
+			V(sem_bank);
 		}
 		else
 		{
@@ -192,6 +216,7 @@ int runInvestorProducer(int nargs, char **args)
 	
 	alldone = sem_create("alldone", 0);	/* this semaphore indicates everybody has gone home */
 	sem_item = sem_create("sem_item_queue", 0);	// this semaphore controls access to item queue
+	sem_bank = sem_create("semBank", 0);
 	if (alldone == NULL)
 	{
 		panic("runInvestorProducer: out of memory\n");

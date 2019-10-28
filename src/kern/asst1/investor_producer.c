@@ -156,12 +156,52 @@ void end_shoping()
 
 void *take_order(void *list)
 {
+	if(list == NULL)
+		return NULL;
 	// only change the servedby value of the item and return a structure pointer
 	// the structure name is: order; it will hold the begin and end of the order items from list
+	(struct item*)list;
+	int count = count_item_not_served(list);
+	int order_count;
+	it(count <= 3)
+		order_count = 1;
+	else
+		order = count / 3;
+	struct order *order_list = NULL;
+	struct item *temp = list;
+	for(int i=0; i<order_count; i++){
+		if(temp->serveBy == -1)
+			insert(order_list, temp);
+		else
+			i--;
+		temp = temp->next;
+	}
 
+	return order_item;
+}
 
+void insert(void *order_list, void *order_item){
+	// insert the order item into the order_list
+	(struct order *) order_list;
+	(struct item *) order_item;
+	struct order *temp = order_list;
+	if(temp == NULL){
+		// the list is empty
+		order_list->ptr = order_item;
+		order_list->prev = NULL;
+		order_list->next = NULL;
+		return;
+	}
+	// else the list is not empty, so insert the order item at the end of the list.
+	while(temp->next != NULL)
+		temp = temp->next;
 
-	return NULL; //modify
+	struct order *pointer = (struct order*) malloc(sizeof(struct order));
+	temp->next = pointer;
+	pointer->prev = temp;
+	pointer->next = NULL;
+	return;
+
 }
 
 int count_item_not_served(void *list){
@@ -187,8 +227,7 @@ int count_item_not_served(void *list){
 
 void produce_item(void *v)
 {
-	(void)v;
-	panic("You need to write some code!!!!");
+	//this function is redundant;
 }
 
 /*
@@ -199,9 +238,14 @@ void produce_item(void *v)
 
 void serve_order(void *v, unsigned long producernumber)
 {
-	(void)v;
-	(void)producernumber;
-	panic("You need to write some code!!!!");
+	(struct order*)v;
+	struct order *temp = v;
+	while (temp != NULL)
+	{
+		temp->ptr->order_type = SERVICED;
+		temp = temp->next;
+	}
+	
 }
 
 /**
@@ -210,31 +254,46 @@ void serve_order(void *v, unsigned long producernumber)
  */
 long int calculate_loan_amount(void *itm)
 {
-	(void)itm;
-	panic("You need to write some code!!!!");
-	return 0;
+	(struct order *)itm;
+	struct order *temp = itm;
+	long int tot_price = 0;
+	while (temp->next != NULL)
+	{
+		tot_price += temp->ptr->i_price;
+		temp = temp->next;
+	}
+	long int profit = tot_price * PRODUCT_PROFIT / 100;
+	long int loan = (tot_price - profit) / (BANK_INTEREST/100 + 1);
+	
+	return loan;
 }
 
 /**
  * void loan_request()
  * Request for loan from bank
  */
-void loan_request(void *amount, unsigned long producernumber)
+void loan_request(void *bank_acc, void *amount, unsigned long producernumber)
 {
-	(void)amount;
-	(void)producernumber;
-	panic("You need to write some code!!!!");
+	(struct bankdata*) bank_acc;
+	(long int*) amount;
+	bank_acc->remaining_cash -= *(amount);
+	bank_acc->acu_loan_amount += *(amount);
+	bank_acc->prod_loan[producernumber] += *(amount);
+
 }
 
 /**
  * loan_reimburse()
  * Return loan amount and service charge
  */
-void loan_reimburse(void *loan, unsigned long producernumber)
+void loan_reimburse(void *bank_data, unsigned long producernumber)
 {
-	(void)loan;
-	(void)producernumber;
-	panic("You need to write some code!!!!");
+	(struct bankdata*) bank_data;
+	int prod_loan = bank_data->prod_loan[producernumber];	// how much loan
+	int intrst = prod_loan * BANK_INTEREST / 100;	// calculate how much interest for how much loan
+	bank_data->interest_amount += intrst;	// pay the interest
+	bank_data->acu_loan_amount -= prod_loan;	// pay the loan
+	bank_data->prod_loan[producernumber] = 0;	// the loan is cleared
 }
 
 /*

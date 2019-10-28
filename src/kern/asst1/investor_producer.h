@@ -18,7 +18,7 @@ void end_shoping(void);      // finish shoping and go home
 void *take_order(void *);                     //take order from the customers
 void produce_item(void *);                    // producer produce an item or product
 long int calculate_loan_amount(void *);     //calculate loan amount
-void loan_request(void *, unsigned long);   // producer request loan to a bank
+void loan_request(void *, void *, unsigned long);   // producer request loan to a bank
 void serve_order(void *, unsigned long);    // producer serve the request of a customer
 void loan_reimburse(void *, unsigned long); // return loan money with service charge
 
